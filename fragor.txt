@@ -1,0 +1,57 @@
+Siktar på VG...
+
+1. När använder man add respektive commit?
+
+Man använder (git) add för att lägga till en eller flera filer som har ändrats eller skapats till staging area.
+(git) commit används för att "committa" eller befästa en ändring som gjorts i en fil.
+
+
+2. Vad är pull repektive push?
+
+Om man har en remote repository använder man pull för att hämta (fetch) och köra merge från sin remote (t.ex från GitHub)
+Push används för att ladda upp sina ändringar från en lokal repository till en remote repository.
+
+
+3. När använder man log respektive status?
+
+(git) log används för att kolla historiken av commits
+(git) status används för att kolla aktuella filer som är unstaged eller staged. (som behöver "addas" eller "committas")
+
+
+4. Hur kan man formulera sig i sina commit-meddelanden?
+
+Man formulerar sig i nutid gällande vad man ändrar. T.ex. "adding main-method"
+
+
+5. Det finns flera sätt att rulla tillbaka koden till ett tidigare tillstånd. Förklara skillnaden och motivera när man skulle använda den ena eller andra metoden. Ge exempel på de kommandon du använder för att göra detta och vissa att det fungerar, vilken output du fick från git-kommandona.
+Tips: Gör exemplen med att backa i en branch så att master fortfarande är korrekt. 
+
+    Exempel: 
+    4187336 (HEAD -> main, origin/main) adding both words exit and EXIT
+    794835e Revert "make a mistake on purpose"
+    8cd9a2b make a mistake on purpose
+
+För att rulla tillbaka koden till tidigare tillstånd kan man använda sig av revert, restore, reset och checkout.
+    -revert skapar en ny commit där man går tillbaka till en tidigare. 
+    Den tar alltså inte bort tidigare commits, utan man kan gå tillbaka i loggen för att se tidigare "felaktiga" commits.
+    Används i publika repositories. Se ovanstående exempel.
+
+    -checkout (restore) kan gå tillbaka till en tidigare commit i de fall man skulle vilja skapa en ny branch därifrån. 
+    Checkout kan även användas för att återställa ändringar i en fil som inte blivit commitad ännu.
+    Om jag i ovanstående exempel skulle vilja bygga vidare på en ny branch från "794835e Revert..." skulle jag kunna med:
+    ---
+    git restore --source main~1
+    git branch version2
+    ---
+    jobba vidare från denna specifika plats
+
+    -reset (--soft/--hard), när det används på "commit-level" kan man använda --hard för att återställa till en tidigare commit och ta bort alla andra ändringar.
+    --soft används för att återställa till en tidigare commit men lämnar fortfarande filerna som "modified". Working directory och index är kvar vid tidigare plats.
+    På stage-level används reset för att unstage en fil.
+    I ovanstående exempel skulle jag kunna t.ex skriva:
+    ---
+    git reset --hard HEAD~1
+    ---
+    för att ta bort alla ändringar i log 4187336 och gå tillbaka ett steg med HEAD, master(main), index och Working directory.
+
+    restore och reset används främst i lokala repositories, eftersom de inte är delade.
